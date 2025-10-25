@@ -1,4 +1,6 @@
 
+console.log("app.js script started.");
+
 import photonRs from 'https://cdn.jsdelivr.net/npm/photon-rs@0.3.1/+esm';
 
 const imageInput = document.getElementById('image-input');
@@ -135,5 +137,4 @@ async function main() {
     });
 }
 
-// Run main function only after the DOM is fully loaded
-window.addEventListener('DOMContentLoaded', main);
+main();
