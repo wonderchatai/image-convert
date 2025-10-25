@@ -1,0 +1,51 @@
+
+body {
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2rem;
+}
+
+h1 {
+    margin-bottom: 2rem;
+}
+
+.options {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.option {
+    display: flex;
+    flex-direction: column;
+}
+
+#output-container {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+#output-image {
+    max-width: 100%;
+    margin-top: 1rem;
+}
+
+#download-link {
+    display: none;
+    margin-top: 1rem;
+}
+
+#log-container {
+    margin-top: 2rem;
+    width: 80%;
+}
+
+#log-output {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    min-height: 100px;
+    white-space: pre-wrap;
+}

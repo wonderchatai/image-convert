@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Converter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Image Converter</h1>
+    <input type="file" id="image-input" accept="image/*">
+    <div class="options">
+        <div class="option">
+            <label for="format-select">Convert to:</label>
+            <select id="format-select">
+                <option value="png">PNG</option>
+                <option value="jpeg">JPEG</option>
+            </select>
+        </div>
+        <div class="option">
+            <label for="width-input">Width:</label>
+            <input type="number" id="width-input" placeholder="Original">
+        </div>
+        <div class="option">
+            <label for="height-input">Height:</label>
+            <input type="number" id="height-input" placeholder="Original">
+        </div>
+    </div>
+    <button id="convert-button">Convert</button>
+    <div id="output-container">
+        <h2>Converted Image:</h2>
+        <img id="output-image" src="" alt="Converted Image">
+        <a id="download-link" href="#" download>Download</a>
+    </div>
+
+    <div id="log-container">
+        <h2>Debug Log:</h2>
+        <pre id="log-output"></pre>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/photon-rs/photon_rs.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
