@@ -12,10 +12,13 @@ const logOutput = document.getElementById('log-output');
 
 function log(message) {
     console.log(message);
-    if (typeof message === 'object') {
-        message = JSON.stringify(message, null, 2);
+    // Ensure logOutput exists before trying to append
+    if (logOutput) {
+        if (typeof message === 'object') {
+            message = JSON.stringify(message, null, 2);
+        }
+        logOutput.textContent += `> ${message}\n`;
     }
-    logOutput.textContent += `> ${message}\n`;
 }
 
 let image = null;
@@ -132,4 +135,5 @@ async function main() {
     });
 }
 
-main();
+// Run main function only after the DOM is fully loaded
+window.addEventListener('DOMContentLoaded', main);
