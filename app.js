@@ -17,10 +17,20 @@ function log(message) {
 }
 
 let image = null;
+let photon = null; // Declare a variable to hold the initialized photon module
 
 async function main() {
-    log('Photon WASM module should be ready (loaded by photon_rs_bg.min.js).');
-    // No explicit wasm_bindgen() call needed here, as photon_rs_bg.min.js handles it.
+    log('Initializing Photon WASM module via wasm_bindgen()...');
+    try {
+        // The photon_rs_bg.min.js script defines wasm_bindgen globally.
+        // Calling it without arguments tells it to find the .wasm file relatively.
+        photon = await wasm_bindgen();
+        log('Photon WASM module loaded and ready.');
+    } catch (error) {
+        log('Error loading Photon WASM module:');
+        log(error);
+        return; // Don't set up listeners if wasm fails to load
+    }
 
     imageInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
@@ -66,9 +76,8 @@ async function main() {
             ctx.drawImage(image, 0, 0);
             log('Drawn input image to canvas.');
 
-            // 2. Open image in Photon (now available directly on the global scope or wasm_bindgen)
-            // Assuming the functions are directly available on the global scope or wasm_bindgen
-            photonImage = open_image(canvas, ctx);
+            // 2. Open image in Photon using the initialized photon object
+            photonImage = photon.open_image(canvas, ctx);
             log('Image opened in Photon.');
 
             // 3. Get resize dimensions
@@ -78,7 +87,7 @@ async function main() {
             // 4. Resize if necessary
             if (newWidth !== image.width || newHeight !== image.height) {
                 log(`Resizing from ${image.width}x${image.height} to ${newWidth}x${newHeight}...`);
-                photonImage = resize(photonImage, newWidth, newHeight, 1); // 1 = Lanczos3
+                photonImage = photon.resize(photonImage, newWidth, newHeight, 1); // 1 = Lanczos3
                 log('Resize complete.');
             } else {
                 log('No resizing needed.');
@@ -90,7 +99,7 @@ async function main() {
             outputCanvas.width = newWidth;
             outputCanvas.height = newHeight;
 
-            const imageData = to_image_data(photonImage);
+            const imageData = photon.to_image_data(photonImage);
             log('Converted Photon image back to ImageData.');
 
             outputCtx.putImageData(imageData, 0, 0);
