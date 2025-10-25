@@ -19,17 +19,8 @@ function log(message) {
 let image = null;
 
 async function main() {
-    log('Initializing Photon WASM module from CDN...');
-    try {
-        // The photon_rs.js script will have defined a global `wasm_bindgen` function.
-        // We call it with the full CDN path to the WASM file to load and initialize the module.
-        await wasm_bindgen('https://cdn.jsdelivr.net/npm/photon-rs/photon_rs_bg.wasm');
-        log('Photon WASM module loaded and ready.');
-    } catch (error) {
-        log('Error loading Photon WASM module:');
-        log(error);
-        return; // Don't set up listeners if wasm fails to load
-    }
+    log('Photon WASM module should be ready (loaded by photon_rs_bg.min.js).');
+    // No explicit wasm_bindgen() call needed here, as photon_rs_bg.min.js handles it.
 
     imageInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
@@ -75,8 +66,9 @@ async function main() {
             ctx.drawImage(image, 0, 0);
             log('Drawn input image to canvas.');
 
-            // 2. Open image in Photon (now available directly on wasm_bindgen)
-            photonImage = wasm_bindgen.open_image(canvas, ctx);
+            // 2. Open image in Photon (now available directly on the global scope or wasm_bindgen)
+            // Assuming the functions are directly available on the global scope or wasm_bindgen
+            photonImage = open_image(canvas, ctx);
             log('Image opened in Photon.');
 
             // 3. Get resize dimensions
@@ -86,7 +78,7 @@ async function main() {
             // 4. Resize if necessary
             if (newWidth !== image.width || newHeight !== image.height) {
                 log(`Resizing from ${image.width}x${image.height} to ${newWidth}x${newHeight}...`);
-                photonImage = wasm_bindgen.resize(photonImage, newWidth, newHeight, 1); // 1 = Lanczos3
+                photonImage = resize(photonImage, newWidth, newHeight, 1); // 1 = Lanczos3
                 log('Resize complete.');
             } else {
                 log('No resizing needed.');
@@ -98,7 +90,7 @@ async function main() {
             outputCanvas.width = newWidth;
             outputCanvas.height = newHeight;
 
-            const imageData = wasm_bindgen.to_image_data(photonImage);
+            const imageData = to_image_data(photonImage);
             log('Converted Photon image back to ImageData.');
 
             outputCtx.putImageData(imageData, 0, 0);
@@ -123,7 +115,7 @@ async function main() {
             log(error);
         } finally {
             if (photonImage) {
-                photonImage.free();
+                photonImage.free(); // Free WASM memory
                 log("Freed wasm memory");
             }
         }
