@@ -1,4 +1,6 @@
 
+import photonRs from 'https://cdn.jsdelivr.net/npm/photon-rs@0.3.1/+esm';
+
 const imageInput = document.getElementById('image-input');
 const formatSelect = document.getElementById('format-select');
 const widthInput = document.getElementById('width-input');
@@ -20,11 +22,10 @@ let image = null;
 let photon = null; // Declare a variable to hold the initialized photon module
 
 async function main() {
-    log('Initializing Photon WASM module via wasm_bindgen()...');
+    log('Dynamically importing and initializing Photon WASM module...');
     try {
-        // The photon_rs_bg.min.js script defines wasm_bindgen globally.
-        // Calling it without arguments tells it to find the .wasm file relatively.
-        photon = await wasm_bindgen();
+        // Initialize the photon-rs module as an ES module.
+        photon = await photonRs();
         log('Photon WASM module loaded and ready.');
     } catch (error) {
         log('Error loading Photon WASM module:');
